@@ -60,13 +60,30 @@ function Metric({ icon: Icon, label, value, detail, tone = 'indigo' }) {
   return <section className="metric"><div className={`metric__icon metric__icon--${tone}`}><Icon size={18} /></div><div><p>{label}</p><strong>{value}</strong><span className={tone === 'risk' ? 'negative' : ''}>{detail}</span></div></section>
 }
 
+function GanttSnapshot() {
+  const activities = [
+    ['Raw mill foundations', 3, 31, 'healthy'],
+    ['Crusher concrete works', 13, 42, 'watch'],
+    ['Steel erection', 27, 48, 'risk'],
+    ['Mechanical installation', 46, 33, 'indigo'],
+    ['Electrical & instrumentation', 66, 24, 'indigo'],
+  ]
+
+  return <section className="panel panel--full gantt-snapshot">
+    <div className="panel__header"><div><h2>Gantt chart · key activities</h2><p>Live programme view · February to October 2025</p></div><button className="text-button">Open full schedule <ArrowUpRight size={15}/></button></div>
+    <div className="gantt-snapshot__scale"><span>Activity</span><span>Feb</span><span>Apr</span><span>Jun</span><span>Aug</span><span>Oct</span></div>
+    {activities.map(([label, start, width, tone]) => <div className="gantt-snapshot__row" key={label}><span>{label}</span><div><i className={`gantt-snapshot__bar gantt-snapshot__bar--${tone}`} style={{ marginLeft: `${start}%`, width: `${width}%` }} /></div></div>)}
+  </section>
+}
+
 function Overview() {
   return <>
     <PageHeading eyebrow="PROJECT CONTROL · NKC-01" title="Project overview">
       <div className="heading-actions"><button className="button button--secondary"><CalendarDays size={16} />14–20 Jul 2025<ChevronDown size={14} /></button><button className="button button--primary"><CloudUpload size={16} />Update report</button></div>
     </PageHeading>
-    <div className="metrics-grid">
+    <div className="metrics-grid metrics-grid--four">
       <Metric icon={TrendingUp} label="Overall progress" value="58.4%" detail="Plan 69.0% · 10.6% behind" tone="risk" />
+      <Metric icon={CalendarDays} label="Forecast finish" value="18 Nov" detail="Original contract · 31 Oct" tone="risk" />
       <Metric icon={ReceiptText} label="Cost committed" value="฿ 418.6m" detail="82% of approved budget" tone="indigo" />
       <Metric icon={ShieldCheck} label="Quality closeout" value="86%" detail="4 NCRs need attention" tone="watch" />
     </div>
@@ -75,6 +92,7 @@ function Overview() {
       <section className="panel priority"><div className="panel__header"><div><h2>Priority actions</h2><p>Three items need a decision</p></div><button className="icon-button" aria-label="Priority actions menu"><MoreHorizontal size={19}/></button></div><div className="priority__list">{issues.map((issue) => <button className="priority__item" key={issue.title}><span className={`issue-icon issue-icon--${issue.level}`}>{issue.level === 'risk' ? <AlertTriangle size={15} /> : <ArrowDownRight size={15}/>}</span><span><b>{issue.title}</b><small>{issue.owner} · due {issue.due}</small></span><ArrowUpRight size={16} /></button>)}</div><button className="text-button">View risk register <ArrowUpRight size={15}/></button></section>
       <section className="panel panel--wide"><div className="panel__header"><div><h2>Workstream progress</h2><p>Actual completion by work breakdown structure</p></div><button className="text-button">Open WBS <ArrowUpRight size={15}/></button></div><div className="workstreams">{wbs.map(([label, value, status]) => <div className="workstream" key={label}><div><span>{label}</span><b>{value}%</b></div><div className="progress-track"><i className={`progress-bar progress-bar--${status}`} style={{ width: `${value}%` }} /></div></div>)}</div></section>
       <section className="panel"><div className="panel__header"><div><h2>Milestones</h2><p>Contractual dates and forecast</p></div><button className="icon-button" aria-label="Milestones menu"><MoreHorizontal size={19}/></button></div><div className="milestone-list">{milestones.slice(0, 3).map(([id, name, plan, actual, status]) => <div className="milestone" key={id}><span className="milestone__date">{actual}</span><span><b>{name}</b><small>Plan {plan}</small></span><Status tone={status === 'Delayed' ? 'risk' : status === 'Watch' ? 'watch' : 'neutral'}>{status}</Status></div>)}</div></section>
+      <GanttSnapshot />
     </div>
   </>
 }
